@@ -9,5 +9,6 @@ object Main {
     Runtime.getRuntime().exec("clear")
     val drawing = board.draw()
     System.out.print(drawing)
+    System.out.print(drawing)
   }
 }
