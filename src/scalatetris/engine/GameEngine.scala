@@ -9,6 +9,12 @@ class GameEngine (val board: Board) {
     val newStone = new Stone(new Point((board.size.width / 2), 0))
     board.stones ::= newStone
   }
+  
+  def moveStone(direction: String) {
+    var stone = board.stones.last
+    stone = Stone(Point(1, 1))
+    board.stones ::= stone
+  }
 }
   
 
