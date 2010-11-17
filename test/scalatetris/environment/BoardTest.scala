@@ -1,5 +1,3 @@
-
-
 package scalatetris.environment
 import junit.framework.TestCase
 import junit.framework.Assert.assertEquals
