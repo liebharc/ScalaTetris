@@ -19,6 +19,8 @@ class Board (val size: Size) {
     drawing += "-" *(size.width + 2) + "\n" 
     drawing
   }
+  
+  var isGameRunning = true
 }
 
 

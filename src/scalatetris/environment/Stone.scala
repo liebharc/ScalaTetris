@@ -12,4 +12,6 @@ case class Stone(val start: Point) {
   
   def isInFrame(frame: Size) = (0 until frame.width).contains(start.x) &&
                                 (0 until frame.height).contains(start.y)
+                                
+  def isOnTop(): Boolean = start.y == 0
 }
