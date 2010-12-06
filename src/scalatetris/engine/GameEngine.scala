@@ -9,7 +9,7 @@ class GameEngine (val board: Board) {
   createNewStone()
   
   def createNewStone() {
-    val newStone = new Stone(new Point((board.size.width / 2), 0))
+    val newStone = createRandomStone(Point((board.size.width / 2), 0))
     if (board.stones.exists(s => s.doesCollide(newStone)) ||
         (!board.stones.isEmpty && board.stones.head.isOnTop))
       board.isGameRunning = false
@@ -17,9 +17,11 @@ class GameEngine (val board: Board) {
       board.stones ::= newStone
   }
   
+  protected def createRandomStone(start: Point) = Stone(start)
+  
   def moveDown() {
      if (!move(s => s.moveDown())) {
-      removeFullRows()
+      board.points = removeFullRows(board.points)
       createNewStone()
      }
   }
@@ -27,7 +29,7 @@ class GameEngine (val board: Board) {
   private def move(action: (Stone) => Stone) = {
     val oldStone = board.stones.head
     val newStone = action(oldStone)
-    if (newStone.isInFrame(board.size) && !board.stones.exists(s => s.doesCollide(newStone))) {
+    if (newStone.isInFrame(board.size) && !board.stones.tail.exists(s => s.doesCollide(newStone))) {
       board.stones = newStone :: board.stones.tail
       true
     }
@@ -42,21 +44,15 @@ class GameEngine (val board: Board) {
     move(s => s.moveRight)
   }
   
-  private def removeFullRows() {
-    var remaining = board.stones
-    board.stones = Nil
-    var rowNo = board.size.height
-    while (rowNo >= 0) {
-      val (stonesInRow, nextRemaining) = remaining.partition(s => s.start.y == rowNo)
-      remaining = nextRemaining
-      if (stonesInRow.size != board.size.width) {
-        board.stones :::= stonesInRow
-        rowNo -= 1
-      } else {
-        remaining = remaining.map{s => s.moveDown}.toList
-      }
-    }
-  }
+ private def removeFullRows(points: List[Point], 
+                            height: Int = board.size.height): List[Point] = points match {
+   case Nil => Nil
+   case _ => val (pointsInRow, pointsNotInRow) = points.partition(_.y == height)
+     if (pointsInRow.length == board.size.width) 
+       removeFullRows(pointsNotInRow, height - 1).map(_.moveDown())
+     else 
+       pointsInRow ::: removeFullRows(pointsNotInRow, height - 1)
+ }
 }
   
 

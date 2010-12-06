@@ -8,12 +8,14 @@ import scalatetris.environment._
 
 class GameEngineTest extends TestCase {
   
-  var board = new Board(Size(3, 3))
-  var engine = new GameEngine(board)
+  var board: Board = _
+  var engine: GameEngine = _
   
   override def setUp() = {
     board = new Board(Size(3, 3))
-    engine = new GameEngine(board)
+    engine = new GameEngine(board) {
+      override protected def createRandomStone(start: Point) = Stone(start)
+    }
   }
   
   def testStoneCreation {
@@ -73,7 +75,7 @@ class GameEngineTest extends TestCase {
     engine.moveDown()
     engine.moveDown()
     
-    assertEquals(List(Stone(Point(0,1)), Stone(Point(0,2))), board.stones.tail)
+    assertEquals(List(Point(0,2), Point(0,1)), board.points.tail)
   }
   
   def testCollidingStonesLeft {
@@ -112,9 +114,9 @@ class GameEngineTest extends TestCase {
     engine.moveDown()
     engine.moveDown()
     
-    assertEquals(3, board.stones.size)    
+    assertEquals(3, board.points.size)    
     engine.moveDown()
-    assertEquals(1, board.stones.size)
+    assertEquals(1, board.points.size)
   }
   
   def testStonesInARowButNotAtBottom {
@@ -194,6 +196,6 @@ class GameEngineTest extends TestCase {
     engine.moveDown()
     engine.moveDown()
     
-    assertEquals(List(Stone(Point(1,2)), Stone(Point(2,2))), board.stones.tail)
+    assertEquals(List(Stone(List(Point(1,2), Point(2,2)))), board.stones.tail)
   }  
 }

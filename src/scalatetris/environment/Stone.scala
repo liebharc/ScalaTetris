@@ -1,17 +1,29 @@
 package scalatetris.environment
 
-case class Stone(val start: Point) {
+object Stone {
+  def apply(start: Point): Stone = Stone(List(start))
+}
+
+object Square {
+  def apply(start: Point): Stone =
+    Stone(List(start,          start.moveRight,
+               start.moveDown, start.moveDown.moveRight))
+}
+
+case class Stone(val points: List[Point]) {
   
-  def moveDown() = Stone(start.moveDown())
+  def moveDown() = Stone(points.map{_.moveDown()})
   
-  def moveLeft() = Stone(start.moveLeft())
+  def moveLeft() = Stone(points.map{_.moveLeft()})
   
-  def moveRight() = Stone(start.moveRight())
+  def moveRight() = Stone(points.map{_.moveRight()})
   
-  def doesCollide(other: Stone) = this.start == other.start
+  def doesCollide(other: Stone) = this.points.exists{a => 
+    other.points.exists(a == _)
+  }
   
-  def isInFrame(frame: Size) = (0 until frame.width).contains(start.x) &&
-                                (0 until frame.height).contains(start.y)
+  def isInFrame(frame: Size) = points.forall(_.isInFrame(frame))
                                 
-  def isOnTop(): Boolean = start.y == 0
+  def isOnTop(): Boolean = points.exists(_.isOnTop)
+  
 }

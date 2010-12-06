@@ -3,13 +3,17 @@ package scalatetris.environment
 class Board (val size: Size) {
   var stones = List[Stone]()
   
+  def points = stones.map(_.points).flatten
+  
+  def points_=(p: List[Point]) = stones = List(Stone(p))
+  
   def draw() = {
     var drawing = ""
     for (arg <- (0 until size.height)) {
       drawing += "|"
-      val stonesInLine = stones.filter(s => s.start.y == arg)
+      val pointsInLine = points.filter(p => p.y == arg)
       for (x <- (0 until size.width)) {
-        if (stonesInLine.exists(s => s.start.x == x)) 
+        if (pointsInLine.exists(p => p.x == x)) 
           drawing += "x"
         else
           drawing += " "
