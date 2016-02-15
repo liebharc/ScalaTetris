@@ -1,24 +1,23 @@
 package scalatetris.engine
 
-import junit.framework.TestCase
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertTrue
-import junit.framework.Assert.assertFalse
 import scalatetris.environment._
+import org.junit.Test
+import org.junit.Assert._
+import org.junit.Before
 
-class GameEngineWithSquaresTest extends TestCase {
+class GameEngineWithSquaresTest {
 
   var board: Board = _
   var engine: GameEngine = _
   
-  override def setUp() = {
+  @Before def setUp() = {
     board = new Board(Size(5, 5))
     engine = new GameEngine(board) {
       override protected def createRandomStone(start: Point) = Square(start)
     }
   }
   
-  def testStoneAtBottomDown {
+  @Test def testStoneAtBottomDown {
     engine.moveDown()
     engine.moveDown()
     engine.moveDown()
@@ -27,7 +26,7 @@ class GameEngineWithSquaresTest extends TestCase {
                  board.stones.last)
   }
   
-  def testStoneMoveLeft {
+  @Test def testStoneMoveLeft {
     engine.moveLeft()
     assertEquals(List(Point(1, 0), Point(2, 0), Point(1,1), Point(2, 1)), board.points)
   }

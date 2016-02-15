@@ -1,29 +1,28 @@
 package scalatetris.engine
 
-import junit.framework.TestCase
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertTrue
-import junit.framework.Assert.assertFalse
 import scalatetris.environment._
+import org.junit.Test
+import org.junit.Assert._
+import org.junit.Before
 
-class GameEngineTest extends TestCase {
+class GameEngineTest {
   
   var board: Board = _
   var engine: GameEngine = _
   
-  override def setUp() = {
+  @Before def setUp() = {
     board = new Board(Size(3, 3))
     engine = new GameEngine(board) {
       override protected def createRandomStone(start: Point) = Stone(start)
     }
   }
   
-  def testStoneCreation {
+  @Test def testStoneCreation {
     assertEquals(1, board.stones.length)
     assertEquals(Stone(Point(1, 0)), board.stones.head)
   }
   
-  def testStoneMoveDown {
+  @Test def testStoneMoveDown {
     engine.moveDown()
     assertEquals(1, board.stones.length)
     assertEquals(Stone(Point(1, 1)), board.stones.head)
@@ -32,40 +31,40 @@ class GameEngineTest extends TestCase {
     assertEquals(Stone(Point(1, 2)), board.stones.head)
   }
   
-  def testStoneAtBottomDown {
+  @Test def testStoneAtBottomDown {
     engine.moveDown()
     engine.moveDown()
     engine.moveDown()
     assertEquals(Stone(Point(1, 2)), board.stones.last)
   }
   
-  def testStoneMoveLeft {
+  @Test def testStoneMoveLeft {
     engine.moveLeft()
     assertEquals(1, board.stones.length)
     assertEquals(Stone(Point(0, 0)), board.stones.head)
   }
   
-  def testStoneAtLeftEndMoveLeft {
+  @Test def testStoneAtLeftEndMoveLeft {
     engine.moveLeft()
     engine.moveLeft()
     assertEquals(1, board.stones.length)
     assertEquals(Stone(Point(0, 0)), board.stones.head)
   }
   
-  def testStoneMoveRight {
+  @Test def testStoneMoveRight {
     engine.moveRight()
     assertEquals(1, board.stones.length)
     assertEquals(Stone(Point(2, 0)), board.stones.head)
   }
   
-  def testStoneAtRightEndMoveRight {
+  @Test def testStoneAtRightEndMoveRight {
     engine.moveRight()
     engine.moveRight()
     assertEquals(1, board.stones.length)
     assertEquals(Stone(Point(2, 0)), board.stones.head)
   }
   
-  def testCollidingStonesDown {
+  @Test def testCollidingStonesDown {
     engine.moveLeft()
     engine.moveDown()
     engine.moveDown()
@@ -78,7 +77,7 @@ class GameEngineTest extends TestCase {
     assertEquals(List(Point(0,2), Point(0,1)), board.points.tail)
   }
   
-  def testCollidingStonesLeft {
+  @Test def testCollidingStonesLeft {
     engine.moveDown()
     engine.moveLeft()    
     
@@ -89,7 +88,7 @@ class GameEngineTest extends TestCase {
     assertEquals(List(Stone(Point(1,1)), Stone(Point(0,1))), board.stones)
   }
   
-  def testCollidingStonesRight {
+  @Test def testCollidingStonesRight {
     engine.moveDown()
     engine.moveRight()    
     
@@ -100,7 +99,7 @@ class GameEngineTest extends TestCase {
     assertEquals(List(Stone(Point(1,1)), Stone(Point(2,1))), board.stones)
   }
   
-  def testStonesInARow {
+  @Test def testStonesInARow {
     engine.moveRight()
     engine.moveDown()
     engine.moveDown()
@@ -119,7 +118,7 @@ class GameEngineTest extends TestCase {
     assertEquals(1, board.points.size)
   }
   
-  def testStonesInARowButNotAtBottom {
+  @Test def testStonesInARowButNotAtBottom {
     engine.moveRight()
     engine.moveDown()
     engine.createNewStone()
@@ -132,7 +131,7 @@ class GameEngineTest extends TestCase {
     assertEquals(3, board.stones.size)
   }
   
-  def testGameEndsIfNewStoneCollides {
+  @Test def testGameEndsIfNewStoneCollides {
     engine.moveDown()
     engine.moveDown()
     engine.moveDown()
@@ -145,7 +144,7 @@ class GameEngineTest extends TestCase {
     assertFalse(board.isGameRunning)
   }
   
-  def testGameEndsIfThereIsARowToHeaven {
+  @Test def testGameEndsIfThereIsARowToHeaven {
     engine.moveLeft()
     engine.moveDown()
     engine.moveDown()
@@ -161,7 +160,7 @@ class GameEngineTest extends TestCase {
     assertFalse(board.isGameRunning)
   }
   
-  def testStonesFall {
+  @Test def testStonesFall {
     engine.moveRight()
     engine.moveDown()
     engine.moveDown()

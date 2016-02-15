@@ -1,23 +1,23 @@
 package scalatetris.environment
-import junit.framework.TestCase
-import junit.framework.Assert.assertEquals
+import org.junit.Test
+import org.junit.Assert._
 
-class BoardTest extends TestCase {
+class BoardTest {
   
-  def testDrawEmptyBoard() {
+  @Test def testDrawEmptyBoard() {
     val board = new Board(Size(2, 3))
     val drawing = board.draw()
     assertEquals("|  |\n|  |\n|  |\n----\n", drawing)
   }
   
-  def testDrawBoardWithOneStone() {
+  @Test def testDrawBoardWithOneStone() {
     val board = new Board(Size(2, 3))
     board.stones ::= Stone(Point(1, 2))
     val drawing = board.draw()
     assertEquals("|  |\n|  |\n| x|\n----\n", drawing)
   }
   
-  def testDrawBoardWithSeveralStones() {
+  @Test def testDrawBoardWithSeveralStones() {
     val board = new Board(Size(2, 3))
     board.stones ::= Stone(Point(1, 2))
     board.stones ::= Stone(Point(1, 1))
@@ -26,7 +26,7 @@ class BoardTest extends TestCase {
     assertEquals("|x |\n| x|\n| x|\n----\n", drawing)
   }
   
-  def testDrawBoardWithTwoStonesOnOneSpot() {
+  @Test def testDrawBoardWithTwoStonesOnOneSpot() {
     val board = new Board(Size(2, 3))
     board.stones ::= Stone(Point(1, 2))
     board.stones ::= Stone(Point(1, 2))
