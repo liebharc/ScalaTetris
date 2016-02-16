@@ -3,8 +3,12 @@ package scalatetris
 import scalatetris.environment.Board
 import scalatetris.engine.GameEngine
 import scalatetris.environment.Size
+import UserInteraction._
+import EngineEvent._
 import akka.actor.ActorSystem
 import akka.actor.Props
+import scala.concurrent.duration.Duration
+import java.util.concurrent.TimeUnit
 import swing._
 import java.awt.Font
 import scala.swing.event.Key
@@ -20,7 +24,7 @@ object Main extends SimpleSwingApplication {
         preferredSize = new Dimension(640, 480)
         editable = false
       }
-      val display = new SwingDisplay(area)
+      
       val frame = new MainFrame {
         title = "Scala Tetris"
         contents = area
@@ -29,34 +33,32 @@ object Main extends SimpleSwingApplication {
       
       val board = new Board(new Size(6, 8))
       val engine = new GameEngine(board)
-      val system = ActorSystem()
-      val tetris = system.actorOf(Props(new Tetris(engine)), name = "tetris")	
+      val display = new SwingDisplay(area)
       val drawing = board.draw()
       display.render(drawing)
+      
+      val system = ActorSystem()
+      val tetris = system.actorOf(Props(new Tetris(engine, board, display)), name = "tetris")
+      import system.dispatcher
+      system.scheduler.schedule(
+          Duration(500, "ms"),
+          Duration(500, "ms"),
+          tetris, 
+          Tick)
       
       listenTo(area.keys)
       reactions += {
         case key: KeyPressed => {
-          // TODO consider board.isGameRunning
           key.key match {
             case Key.A => 
-              /* TODO inform Tetris actor and remove this code */
-              engine.moveLeft()
-              display.render(board.draw()) 
+              tetris ! Left
             case Key.S => 
-              /* TODO inform Tetris actor and remove this code */
-              engine.moveDown()
-              display.render(board.draw())
+              tetris ! Down
             case Key.D => 
-              /* TODO inform Tetris actor and remove this code */
-              engine.moveRight()
-              display.render(board.draw())
+              tetris ! Right
             case _ => ()
           }
-          
-          key.consume()
         }
-        case key: KeyReleased => key.consume()
       }
       
       frame

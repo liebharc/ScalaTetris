@@ -3,7 +3,7 @@ package scalatetris
 import swing._
 
 trait Display {
- def render(value: String);
+  def render(value: String);
 }
 
 class SwingDisplay(area: TextArea) extends Display {
