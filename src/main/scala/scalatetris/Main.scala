@@ -7,14 +7,13 @@ import akka.actor.ActorSystem
 import akka.actor.Props
 
 object Main extends App {
-
+    System.out.print();
     val board = new Board(new Size(6, 8))
     val engine = new GameEngine(board)
-val system = ActorSystem("TetrisSystem")
-val tetris = system.actorOf(Props(new Tetris(engine)), name = "tetris")	
-    Runtime.getRuntime().exec("clear")
+    val system = ActorSystem()
+    val tetris = system.actorOf(Props(new Tetris(engine)), name = "tetris")	
     val drawing = board.draw()
-    System.out.print(drawing)
+    Display.render(drawing)
     while(board.isGameRunning) {
       val input = System.in.read
       input match {
@@ -27,9 +26,8 @@ val tetris = system.actorOf(Props(new Tetris(engine)), name = "tetris")
         case '\n' => ()
         case _ => engine.moveDown()
       }
-      Runtime.getRuntime().exec("clear")
       val drawing = board.draw()
-      System.out.print(drawing)
+      Display.render(drawing)
     }
     System.exit(0)
 }
