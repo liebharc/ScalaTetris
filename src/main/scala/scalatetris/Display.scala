@@ -1,11 +1,13 @@
 package scalatetris
 
-object Display {
-  private def isWindows() = {
-    System.getProperty("os.name").contains("Windows")
-  }
-  
+import swing._
+
+trait Display {
+ def render(value: String);
+}
+
+class SwingDisplay(area: TextArea) extends Display {
   def render(value: String) {
-    System.out.println(value)
+      area.text = value;
   }
 }
