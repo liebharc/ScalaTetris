@@ -41,7 +41,7 @@ object Main extends SimpleSwingApplication {
       import system.dispatcher
       system.scheduler.schedule(
           Duration(500, "ms"),
-          Duration(500, "ms"),
+          Duration(100, "ms"),
           tetris, 
           Tick)
       

@@ -7,7 +7,7 @@ sealed class GameEngine (val board: Board, val stoneFactory: StoneFactory) {
   
   createNewStone()
   
-  var currentStatistics = Statistics(Calendar.getInstance().getTime(), 0)
+  private var currentStatistics = Statistics(Calendar.getInstance().getTime(), 0)
   
   def statistics() = currentStatistics
   

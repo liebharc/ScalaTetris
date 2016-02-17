@@ -6,7 +6,9 @@ import EngineEvent._
 import environment.Board
 import scalatetris.engine.GameEngine
 
-class Tetris(val engine: GameEngine, val board: Board, val display: Display) extends Actor { 
+class Tetris(val engine: GameEngine, val board: Board, val display: Display) extends Actor {
+  private var tickCounts = 0 
+  
   def receive = {
     case _ if !board.isGameRunning => ()
     case Left => 
@@ -19,7 +21,11 @@ class Tetris(val engine: GameEngine, val board: Board, val display: Display) ext
       engine.moveDown()
       display.render(renderAll())
     case Tick => {
-      engine.moveDown()
+      tickCounts += 1
+      if (tickCounts % 5 == 0) {
+        engine.moveDown()
+      }
+      
       display.render(renderAll())
     }
   }

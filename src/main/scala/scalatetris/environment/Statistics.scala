@@ -8,7 +8,7 @@ case class Statistics(val startTime: Date, val rowsCompleted: Long) {
   def draw() = {
     val now = Calendar.getInstance().getTime()
     val duration = now.getTime() - startTime.getTime()
-    val format = new SimpleDateFormat("mm:ss.SSS");
+    val format = new SimpleDateFormat("mm:ss");
     "Rows completed: " + rowsCompleted + "\n" +
     "Time spent    : " + format.format(duration)
   }
