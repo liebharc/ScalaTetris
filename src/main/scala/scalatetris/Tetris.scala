@@ -8,26 +8,24 @@ import scalatetris.engine.GameEngine
 
 class Tetris(val engine: GameEngine, val board: Board, val display: Display) extends Actor { 
   def receive = {
+    case _ if !board.isGameRunning => ()
     case Left => 
-      if (board.isGameRunning) {
-        engine.moveLeft()
-        display.render(board.draw())
-      }
+      engine.moveLeft()
+      display.render(renderAll())
     case Right =>
-      if (board.isGameRunning) {
-        engine.moveRight()
-        display.render(board.draw())
-      }
+      engine.moveRight()
+      display.render(renderAll())
     case Down =>
-      if (board.isGameRunning) {
-        engine.moveDown()
-        display.render(board.draw())
-      }
+      engine.moveDown()
+      display.render(renderAll())
     case Tick => {
-      if (board.isGameRunning) {
-        engine.moveDown()
-        display.render(board.draw())
-      }
+      engine.moveDown()
+      display.render(renderAll())
     }
+  }
+  
+  def renderAll() = {
+    board.draw() + "\n\n" +
+    engine.statistics().draw()
   }
 }

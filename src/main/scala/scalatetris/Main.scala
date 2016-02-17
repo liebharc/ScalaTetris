@@ -31,7 +31,7 @@ object Main extends SimpleSwingApplication {
       }
       
       val board = new Board(new Size(6, 8))
-      val engine = new GameEngine(board, OnlyPointsStoneFactory)
+      val engine = new GameEngine(board, OnlySquaresStoneFactory)
       val display = new SwingDisplay(area)
       val drawing = board.draw()
       display.render(drawing)

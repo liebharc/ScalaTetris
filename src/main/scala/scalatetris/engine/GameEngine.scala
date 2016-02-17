@@ -1,13 +1,15 @@
 package scalatetris.engine
 
-import scalatetris.environment.Board
-import scalatetris.environment.Point
-import scalatetris.environment.Stone
-import scalatetris.environment.StoneFactory
+import scalatetris.environment._
+import java.util.Calendar 
 
 sealed class GameEngine (val board: Board, val stoneFactory: StoneFactory) {
   
   createNewStone()
+  
+  var currentStatistics = Statistics(Calendar.getInstance().getTime(), 0)
+  
+  def statistics() = currentStatistics
   
   def createNewStone() {
     val newStone = stoneFactory.createRandomStone(Point((board.size.width / 2), 0))
@@ -47,8 +49,10 @@ sealed class GameEngine (val board: Board, val stoneFactory: StoneFactory) {
                             height: Int = board.size.height): List[Point] = points match {
    case Nil => Nil
    case _ => val (pointsInRow, pointsNotInRow) = points.partition(_.y == height)
-     if (pointsInRow.length == board.size.width) 
+     if (pointsInRow.length == board.size.width) {
+       currentStatistics = currentStatistics.anotherRowHasBeenCompleted()
        removeFullRows(pointsNotInRow, height - 1).map(_.moveDown())
+     }
      else 
        pointsInRow ::: removeFullRows(pointsNotInRow, height - 1)
  }

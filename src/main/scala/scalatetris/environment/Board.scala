@@ -2,7 +2,7 @@ package scalatetris.environment
 
 class Board (val size: Size) {
   var stones = List[Stone]()
-  
+    
   def points = stones.map(_.points).flatten
   
   def points_=(p: List[Point]) = stones = List(Stone(p))
