@@ -1,8 +1,7 @@
 package scalatetris
 
-import scalatetris.environment.Board
 import scalatetris.engine.GameEngine
-import scalatetris.environment.Size
+import scalatetris.environment._
 import UserInteraction._
 import EngineEvent._
 import akka.actor.ActorSystem
@@ -32,7 +31,7 @@ object Main extends SimpleSwingApplication {
       }
       
       val board = new Board(new Size(6, 8))
-      val engine = new GameEngine(board)
+      val engine = new GameEngine(board, OnlyPointsStoneFactory)
       val display = new SwingDisplay(area)
       val drawing = board.draw()
       display.render(drawing)

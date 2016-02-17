@@ -12,9 +12,7 @@ class GameEngineTest {
   
   @Before def setUp() = {
     board = new Board(Size(3, 3))
-    engine = new GameEngine(board) {
-      override protected def createRandomStone(start: Point) = Stone(start)
-    }
+    engine = new GameEngine(board, OnlyPointsStoneFactory)
   }
   
   @Test def testStoneCreation {

@@ -3,21 +3,20 @@ package scalatetris.engine
 import scalatetris.environment.Board
 import scalatetris.environment.Point
 import scalatetris.environment.Stone
+import scalatetris.environment.StoneFactory
 
-class GameEngine (val board: Board) {
+sealed class GameEngine (val board: Board, val stoneFactory: StoneFactory) {
   
   createNewStone()
   
   def createNewStone() {
-    val newStone = createRandomStone(Point((board.size.width / 2), 0))
+    val newStone = stoneFactory.createRandomStone(Point((board.size.width / 2), 0))
     if (board.stones.exists(s => s.doesCollide(newStone)) ||
         (!board.stones.isEmpty && board.stones.head.isOnTop))
       board.isGameRunning = false
     else
       board.stones ::= newStone
   }
-  
-  protected def createRandomStone(start: Point) = Stone(start)
   
   def moveDown() {
      if (!move(s => s.moveDown())) {
