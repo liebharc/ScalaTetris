@@ -12,8 +12,7 @@ object Square {
 
 object Line{
   def apply(start: Point): Stone =
-    Stone(List(start,          start.moveRight,
-               start.moveDown, start.moveDown.moveRight))
+    Stone(List(start, start.moveDown, start.moveDown.moveDown, start.moveDown.moveDown.moveDown))
 }
 
 case class Stone(val points: List[Point]) {
