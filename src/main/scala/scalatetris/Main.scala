@@ -20,17 +20,17 @@ object Main extends SimpleSwingApplication {
     def top = {
       val area = new TextArea {
         font = new Font(Font.MONOSPACED, Font.PLAIN, 16)
-        preferredSize = new Dimension(640, 480)
+        preferredSize = new Dimension(640, 768)
         editable = false
       }
       
       val frame = new MainFrame {
         title = "Scala Tetris"
         contents = area
-        preferredSize = new Dimension(640, 480)
+        preferredSize = new Dimension(640, 768)
       }
       
-      val board = new Board(new Size(6, 8))
+      val board = new Board(new Size(10, 20))
       val engine = new GameEngine(board, OnlySquaresStoneFactory)
       val display = new SwingDisplay(area)
       val drawing = board.draw()

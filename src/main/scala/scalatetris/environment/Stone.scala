@@ -10,6 +10,12 @@ object Square {
                start.moveDown, start.moveDown.moveRight))
 }
 
+object Line{
+  def apply(start: Point): Stone =
+    Stone(List(start,          start.moveRight,
+               start.moveDown, start.moveDown.moveRight))
+}
+
 case class Stone(val points: List[Point]) {
   
   def moveDown() = Stone(points.map{_.moveDown()})
