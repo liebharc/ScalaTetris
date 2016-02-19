@@ -194,6 +194,6 @@ class GameEngineTest {
     engine.moveDown()
     
     assertEquals(List(Stone(List(Point(1,2), Point(2,2)))), board.stones.tail)
-    assertEquals(engine.statistics.rowsCompleted, 1)
+    assertEquals(board.statistics.rowsCompleted, 1)
   }  
 }

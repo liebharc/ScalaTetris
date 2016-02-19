@@ -31,7 +31,6 @@ class Tetris(val engine: GameEngine, val board: Board, val display: Display) ext
   }
   
   def renderAll() = {
-    board.draw() + "\n\n" +
-    engine.statistics().draw()
+    board.draw()
   }
 }

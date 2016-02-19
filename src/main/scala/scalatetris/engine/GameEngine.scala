@@ -7,10 +7,6 @@ sealed class GameEngine (val board: Board, val stoneFactory: StoneFactory) {
   
   createNewStone()
   
-  private var currentStatistics = Statistics(Calendar.getInstance().getTime(), 0)
-  
-  def statistics() = currentStatistics
-  
   def createNewStone() {
     val newStone = stoneFactory.createRandomStone(Point((board.size.width / 2), 0))
     if (board.stones.exists(s => s.doesCollide(newStone)) ||
@@ -22,7 +18,9 @@ sealed class GameEngine (val board: Board, val stoneFactory: StoneFactory) {
   
   def moveDown() {
      if (!move(s => s.moveDown())) {
-      board.points = removeFullRows(board.points)
+      val (points, numberOfRemovedRows) = removeFullRows(board.points)
+      board.points = points
+      board.statistics = board.statistics.anotherRowHasBeenCompleted(numberOfRemovedRows)
       createNewStone()
      }
   }
@@ -46,15 +44,16 @@ sealed class GameEngine (val board: Board, val stoneFactory: StoneFactory) {
   }
   
  private def removeFullRows(points: List[Point], 
-                            height: Int = board.size.height): List[Point] = points match {
-   case Nil => Nil
+                            height: Int = board.size.height): (List[Point], Int) = points match {
+   case Nil => (Nil, 0)
    case _ => val (pointsInRow, pointsNotInRow) = points.partition(_.y == height)
+     val (rows, numberOfRemovedRows) = removeFullRows(pointsNotInRow, height - 1)
      if (pointsInRow.length == board.size.width) {
-       currentStatistics = currentStatistics.anotherRowHasBeenCompleted()
-       removeFullRows(pointsNotInRow, height - 1).map(_.moveDown())
+       (rows.map(_.moveDown()), numberOfRemovedRows + 1)
      }
-     else 
-       pointsInRow ::: removeFullRows(pointsNotInRow, height - 1)
+     else { 
+       (pointsInRow ::: rows, numberOfRemovedRows)
+     }
  }
 }
   

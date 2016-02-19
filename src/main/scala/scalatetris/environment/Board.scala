@@ -1,5 +1,7 @@
 package scalatetris.environment
 
+import java.util.Calendar
+
 class Board (val size: Size) {
   var stones = List[Stone]()
     
@@ -7,7 +9,20 @@ class Board (val size: Size) {
   
   def points_=(p: List[Point]) = stones = List(Stone(p))
   
-  def draw() = {
+  var statistics = Statistics(Calendar.getInstance().getTime(), 0)
+   
+  def draw() = 
+  if (isGameRunning) {
+    drawBoardOnly + "\n" +
+    statistics.draw() 
+  } else 
+  {
+    drawBoardOnly + 
+    "GAME OVER\n" +
+    statistics.draw()
+  }
+  
+  def drawBoardOnly() = {
     var drawing = ""
     for (arg <- (0 until size.height)) {
       drawing += "|"
