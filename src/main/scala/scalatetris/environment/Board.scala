@@ -5,22 +5,26 @@ import java.util.Calendar
 class Board (val size: Size, firstStone: Stone, firstPreview: Stone) {
   private def topCenter = Point(size.width / 2, 0)
   
-  var stones = List[Stone](firstStone.toTopCenter(topCenter))
+  private var _stones = List[Stone](firstStone.toTopCenter(topCenter))
   
   private var _isGameRunning = true
   
   def isGameRunning = _isGameRunning
     
-  def points = stones.map(_.points).flatten
+  def points = _stones.map(_.points).flatten
   
-  var statistics = Statistics(Calendar.getInstance().getTime(), 0)
+  private var _statistics = Statistics(Calendar.getInstance().getTime(), 0)
   
   private var _preview = firstPreview
   
   def preview = _preview
   
+  def stones = _stones
+  
+  def statistics = _statistics
+  
   def update(stones: List[Stone]) {
-    this.stones = stones
+    _stones = stones
   }
   
   def update(stones: List[Stone], numberOfRowsRemoved: Int, preview: Stone) {
@@ -31,26 +35,26 @@ class Board (val size: Size, firstStone: Stone, firstPreview: Stone) {
     }
     else
     {
-      this.stones = _preview.toTopCenter(topCenter) :: stones
-      statistics = statistics.anotherRowHasBeenCompleted(numberOfRowsRemoved)
+      _stones = _preview.toTopCenter(topCenter) :: stones
+      _statistics = _statistics.anotherRowHasBeenCompleted(numberOfRowsRemoved)
       _preview = preview
     }
   }
   
   def forceNewStone(preview: Stone) {
-    this.stones = _preview.toTopCenter(topCenter) :: stones
+    _stones = _preview.toTopCenter(topCenter) :: _stones
     _preview = preview
   }
    
   def draw() = 
   if (isGameRunning) {
     drawBoardOnly + "\n" +
-    statistics.draw() 
+    _statistics.draw() 
   } else 
   {
     drawBoardOnly + 
     "GAME OVER\n" +
-    statistics.draw()
+    _statistics.draw()
   }
   
   def drawBoardOnly() = {
@@ -72,8 +76,8 @@ class Board (val size: Size, firstStone: Stone, firstPreview: Stone) {
   
   def restart() {
     _isGameRunning = true
-    statistics = Statistics(Calendar.getInstance().getTime(), 0)
-    stones = List[Stone]()
+    _statistics = Statistics(Calendar.getInstance().getTime(), 0)
+    _stones = List[Stone]()
   }
   
   def endGame() = _isGameRunning = false
