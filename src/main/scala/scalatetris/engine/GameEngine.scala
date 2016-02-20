@@ -84,6 +84,16 @@ sealed class GameEngine (val boardSize: Size, val stoneFactory: StoneFactory) {
   def pause() = isRunning = false
   
   def continue() = isRunning = true
+  
+  def backwardInTime() {
+    history match {
+      case Nil => ()
+      case head :: tail => 
+        board = head
+        history = tail
+    }
+    pause()
+  }
     
   private def removeFullRows(points: List[Point], 
                             height: Int = board.size.height): (List[Point], Int) = points match {
