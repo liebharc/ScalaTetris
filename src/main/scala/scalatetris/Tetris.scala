@@ -6,13 +6,13 @@ import EngineEvent._
 import environment.Board
 import scalatetris.engine.GameEngine
 
-class Tetris(val engine: GameEngine, val board: Board, val display: Display) extends Actor {
+class Tetris(val engine: GameEngine, val display: Display) extends Actor {
   private var tickCounts = 0 
   
   def receive = {
-    case Restart if !board.isGameRunning => 
-      board.Reset()
-    case _ if !board.isGameRunning => ()
+    case Restart if !engine.isGameRunning => 
+      engine.restart()
+    case _ if !engine.isGameRunning => ()
     case Left => 
       engine.moveLeft()
       display.render(renderAll())
@@ -39,6 +39,6 @@ class Tetris(val engine: GameEngine, val board: Board, val display: Display) ext
   }
   
   def renderAll() = {
-    board.draw()
+    engine.draw()
   }
 }

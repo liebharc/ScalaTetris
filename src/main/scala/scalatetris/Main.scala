@@ -37,7 +37,7 @@ object Main extends SimpleSwingApplication {
       display.render(drawing)
       
       val system = ActorSystem()
-      val tetris = system.actorOf(Props(new Tetris(engine, board, display)), name = "tetris")
+      val tetris = system.actorOf(Props(new Tetris(engine, display)), name = "tetris")
       import system.dispatcher
       system.scheduler.schedule(
           Duration(500, "ms"),

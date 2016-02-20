@@ -54,6 +54,12 @@ sealed class GameEngine (val board: Board, val stoneFactory: StoneFactory) {
     move(s => s.rotateRight)
   }
   
+  def restart() = board.restart()
+  
+  def draw() = board.draw()
+  
+  def isGameRunning = board.isGameRunning
+  
   private def removeFullRows(points: List[Point], 
                             height: Int = board.size.height): (List[Point], Int) = points match {
    case Nil => (Nil, 0)
