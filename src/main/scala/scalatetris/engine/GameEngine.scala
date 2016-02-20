@@ -3,36 +3,25 @@ package scalatetris.engine
 import scalatetris.environment._
 import java.util.Calendar 
 
-sealed class GameEngine (val board: Board, val stoneFactory: StoneFactory) {
-  
-  createNewStone()
-  
-  def createNewStone() {
-    val newStone = stoneFactory.createRandomStone(Point((board.size.width / 2), 0))
-    if (board.stones.exists(s => s.doesCollide(newStone)) ||
-        (!board.stones.isEmpty && board.stones.head.isOnTop))
-      board.endGame()
-    else
-      board.stones ::= newStone
-  }
-  
+sealed class GameEngine (val boardSize: Size, val stoneFactory: StoneFactory) {
+  val board = 
+    new Board(
+        boardSize, 
+        stoneFactory.createRandomStone(),
+        stoneFactory.createRandomStone())
+    
   def moveDown() {
-     if (!move(s => s.moveDown())) {
+    if (!move(s => s.moveDown())) {
       val (points, numberOfRemovedRows) = removeFullRows(board.points)
-      board.stones = List(Stone(points))
-      board.statistics = board.statistics.anotherRowHasBeenCompleted(numberOfRemovedRows)
-      createNewStone()
-     }
+      board.update(List(Stone(points)), numberOfRemovedRows, stoneFactory.createRandomStone())
+    }
   }
   
   private def move(action: (Stone) => Stone) = {
-    if (board.stones.isEmpty)
-      createNewStone()
-    
     val oldStone = board.stones.head
     val newStone = action(oldStone)
     if (newStone.isInFrame(board.size) && !board.stones.tail.exists(s => s.doesCollide(newStone))) {
-      board.stones = newStone :: board.stones.tail
+      board.update(newStone :: board.stones.tail)
       true
     }
     else false
@@ -58,8 +47,18 @@ sealed class GameEngine (val board: Board, val stoneFactory: StoneFactory) {
   
   def draw() = board.draw()
   
+  def forceNewStone() = board.forceNewStone(stoneFactory.createRandomStone())
+  
   def isGameRunning = board.isGameRunning
   
+  def stones = board.stones
+  
+  def points = board.points
+  
+  def statistics = board.statistics
+  
+  def drawBoardOnly() = board.drawBoardOnly
+    
   private def removeFullRows(points: List[Point], 
                             height: Int = board.size.height): (List[Point], Int) = points match {
    case Nil => (Nil, 0)

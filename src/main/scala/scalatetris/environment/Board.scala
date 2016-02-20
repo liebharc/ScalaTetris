@@ -2,8 +2,10 @@ package scalatetris.environment
 
 import java.util.Calendar
 
-class Board (val size: Size) {
-  var stones = List[Stone]()
+class Board (val size: Size, firstStone: Stone, firstPreview: Stone) {
+  private def topCenter = Point(size.width / 2, 0)
+  
+  var stones = List[Stone](firstStone.toTopCenter(topCenter))
   
   private var _isGameRunning = true
   
@@ -12,6 +14,33 @@ class Board (val size: Size) {
   def points = stones.map(_.points).flatten
   
   var statistics = Statistics(Calendar.getInstance().getTime(), 0)
+  
+  private var _preview = firstPreview
+  
+  def preview = _preview
+  
+  def update(stones: List[Stone]) {
+    this.stones = stones
+  }
+  
+  def update(stones: List[Stone], numberOfRowsRemoved: Int, preview: Stone) {
+    if (stones.exists(s => s.doesCollide(_preview)) ||
+        (!stones.isEmpty && stones.head.isOnTop))
+    {
+      _isGameRunning = false    
+    }
+    else
+    {
+      this.stones = _preview.toTopCenter(topCenter) :: stones
+      statistics = statistics.anotherRowHasBeenCompleted(numberOfRowsRemoved)
+      _preview = preview
+    }
+  }
+  
+  def forceNewStone(preview: Stone) {
+    this.stones = _preview.toTopCenter(topCenter) :: stones
+    _preview = preview
+  }
    
   def draw() = 
   if (isGameRunning) {

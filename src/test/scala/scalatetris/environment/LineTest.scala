@@ -8,16 +8,14 @@ import org.junit.Assert._
  */
 class LineTest {
   
-  var board: Board = _
   var engine: GameEngine = _
   
   @Before def setUp() = {
-    board = new Board(Size(5, 5))
-    engine = new GameEngine(board, OnlyLinesStoneFactory)
+    engine = new GameEngine(Size(5, 5), OnlyLinesStoneFactory)
   }
   
   @Test def drawLineTest {
-    val drawing = board.drawBoardOnly()
+    val drawing = engine.drawBoardOnly()
     val expected = 
       "|  x  |\n" +
       "|  x  |\n" +
@@ -30,7 +28,7 @@ class LineTest {
   
   @Test def rotateLeftTest {
     engine.rotateLeft()
-    val drawing = board.drawBoardOnly()
+    val drawing = engine.drawBoardOnly()
     val expected = 
       "|     |\n" +
       "|     |\n" +
@@ -43,7 +41,7 @@ class LineTest {
   
   @Test def rotateRightTest {
     engine.rotateRight()
-    val drawing = board.drawBoardOnly()
+    val drawing = engine.drawBoardOnly()
     val expected = 
       "|     |\n" +
       "|     |\n" +
@@ -57,7 +55,7 @@ class LineTest {
   @Test def rotateRightTwiceTest {
     engine.rotateRight()
     engine.rotateRight()
-    val drawing = board.drawBoardOnly()
+    val drawing = engine.drawBoardOnly()
     val expected = 
       "| x   |\n" +
       "| x   |\n" +
@@ -70,7 +68,7 @@ class LineTest {
   
   @Test def rotationNotPossibleTest {
     engine.rotateRight()
-    val drawing = board.drawBoardOnly()
+    val drawing = engine.drawBoardOnly()
     val expected = 
       "|     |\n" +
       "|     |\n" +
@@ -81,10 +79,14 @@ class LineTest {
     assertEquals(expected, drawing)
   }
   
-  @Test def toTopTest {
-    val stone = board.stones.head
-    val moved = stone.moveDown().moveDown()
-    val upAgain = moved.toTop()
+  @Test def toTopCenerTest {
+    val stone = engine.stones.head
+    val moved = 
+      stone
+      .moveDown()
+      .moveDown()
+      .moveLeft()
+    val upAgain = moved.toTopCenter(Point(2, 0))
     assertEquals(stone, upAgain)
   }
 }

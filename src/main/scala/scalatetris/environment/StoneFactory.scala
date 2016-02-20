@@ -3,13 +3,15 @@ package scalatetris.environment
 import java.util.Random
 
 trait StoneFactory {
-   def createRandomStone(start: Point): Stone
+  protected def start = Point(0, 0) 
+  
+  def createRandomStone(): Stone
 }
 
 object RandomStoneFactory extends StoneFactory {
   private val random = new Random()
   
-  def createRandomStone(start: Point) = 
+  def createRandomStone() = 
     {
       val rand = random.nextInt(7)
       var point = rand match {
@@ -26,22 +28,22 @@ object RandomStoneFactory extends StoneFactory {
       for (_ <- 1 to rotation) {
         point = point.rotateLeft()
       }
-      point.toTop()
+      point
     }
 }
 
 object OnlyPointsStoneFactory extends StoneFactory {
-   def createRandomStone(start: Point) = Stone(start)
+   def createRandomStone() = Stone(start)
 }
 
 object OnlySquaresStoneFactory extends StoneFactory {
-   def createRandomStone(start: Point) = Square(start)
+   def createRandomStone() = Square(start)
 }
 
 object OnlyLinesStoneFactory extends StoneFactory {
-   def createRandomStone(start: Point) = Line(start)
+   def createRandomStone() = Line(start)
 }
 
 object NoStonesFactory extends StoneFactory {
-   def createRandomStone(start: Point) = Stone(Nil)
+   def createRandomStone() = Stone(Nil)
 }

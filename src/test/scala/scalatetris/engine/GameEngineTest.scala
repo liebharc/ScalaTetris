@@ -6,60 +6,57 @@ import org.junit.Assert._
 import org.junit.Before
 
 class GameEngineTest {
-  
-  var board: Board = _
   var engine: GameEngine = _
   
   @Before def setUp() = {
-    board = new Board(Size(3, 3))
-    engine = new GameEngine(board, OnlyPointsStoneFactory)
+    engine = new GameEngine(Size(3, 3), OnlyPointsStoneFactory)
   }
   
   @Test def testStoneCreation {
-    assertEquals(1, board.stones.length)
-    assertEquals(Stone(Point(1, 0)), board.stones.head)
+    assertEquals(1, engine.stones.length)
+    assertEquals(Stone(Point(1, 0)), engine.stones.head)
   }
   
   @Test def testStoneMoveDown {
     engine.moveDown()
-    assertEquals(1, board.stones.length)
-    assertEquals(Stone(Point(1, 1)), board.stones.head)
+    assertEquals(1, engine.stones.length)
+    assertEquals(Stone(Point(1, 1)), engine.stones.head)
     
     engine.moveDown()
-    assertEquals(Stone(Point(1, 2)), board.stones.head)
+    assertEquals(Stone(Point(1, 2)), engine.stones.head)
   }
   
   @Test def testStoneAtBottomDown {
     engine.moveDown()
     engine.moveDown()
     engine.moveDown()
-    assertEquals(Stone(Point(1, 2)), board.stones.last)
+    assertEquals(Stone(Point(1, 2)), engine.stones.last)
   }
   
   @Test def testStoneMoveLeft {
     engine.moveLeft()
-    assertEquals(1, board.stones.length)
-    assertEquals(Stone(Point(0, 0)), board.stones.head)
+    assertEquals(1, engine.stones.length)
+    assertEquals(Stone(Point(0, 0)), engine.stones.head)
   }
   
   @Test def testStoneAtLeftEndMoveLeft {
     engine.moveLeft()
     engine.moveLeft()
-    assertEquals(1, board.stones.length)
-    assertEquals(Stone(Point(0, 0)), board.stones.head)
+    assertEquals(1, engine.stones.length)
+    assertEquals(Stone(Point(0, 0)), engine.stones.head)
   }
   
   @Test def testStoneMoveRight {
     engine.moveRight()
-    assertEquals(1, board.stones.length)
-    assertEquals(Stone(Point(2, 0)), board.stones.head)
+    assertEquals(1, engine.stones.length)
+    assertEquals(Stone(Point(2, 0)), engine.stones.head)
   }
   
   @Test def testStoneAtRightEndMoveRight {
     engine.moveRight()
     engine.moveRight()
-    assertEquals(1, board.stones.length)
-    assertEquals(Stone(Point(2, 0)), board.stones.head)
+    assertEquals(1, engine.stones.length)
+    assertEquals(Stone(Point(2, 0)), engine.stones.head)
   }
   
   @Test def testCollidingStonesDown {
@@ -72,29 +69,29 @@ class GameEngineTest {
     engine.moveDown()
     engine.moveDown()
     
-    assertEquals(List(Point(0,2), Point(0,1)), board.points.tail)
+    assertEquals(List(Point(0,2), Point(0,1)), engine.points.tail)
   }
   
   @Test def testCollidingStonesLeft {
     engine.moveDown()
     engine.moveLeft()    
     
-    engine.createNewStone()
+    engine.forceNewStone()
     engine.moveDown()
     engine.moveLeft()    
     
-    assertEquals(List(Stone(Point(1,1)), Stone(Point(0,1))), board.stones)
+    assertEquals(List(Stone(Point(1,1)), Stone(Point(0,1))), engine.stones)
   }
   
   @Test def testCollidingStonesRight {
     engine.moveDown()
     engine.moveRight()    
     
-    engine.createNewStone()
+    engine.forceNewStone()
     engine.moveDown()
     engine.moveRight()    
     
-    assertEquals(List(Stone(Point(1,1)), Stone(Point(2,1))), board.stones)
+    assertEquals(List(Stone(Point(1,1)), Stone(Point(2,1))), engine.stones)
   }
   
   @Test def testStonesInARow {
@@ -111,22 +108,22 @@ class GameEngineTest {
     engine.moveDown()
     engine.moveDown()
     
-    assertEquals(3, board.points.size)    
+    assertEquals(3, engine.points.size)    
     engine.moveDown()
-    assertEquals(1, board.points.size)
+    assertEquals(1, engine.points.size)
   }
   
   @Test def testStonesInARowButNotAtBottom {
     engine.moveRight()
     engine.moveDown()
-    engine.createNewStone()
+    engine.forceNewStone()
     
     engine.moveDown()
-    engine.createNewStone()
+    engine.forceNewStone()
     
     engine.moveLeft()
     engine.moveDown()
-    assertEquals(3, board.stones.size)
+    assertEquals(3, engine.stones.size)
   }
   
   @Test def testGameEndsIfNewStoneCollides {
@@ -137,9 +134,9 @@ class GameEngineTest {
     engine.moveDown()
     engine.moveDown()
     
-    assertTrue(board.isGameRunning)
+    assertTrue(engine.isGameRunning)
     engine.moveDown()
-    assertFalse(board.isGameRunning)
+    assertFalse(engine.isGameRunning)
   }
   
   @Test def testGameEndsIfThereIsARowToHeaven {
@@ -152,10 +149,10 @@ class GameEngineTest {
     engine.moveDown()
     engine.moveDown()
     
-    assertTrue(board.isGameRunning)
+    assertTrue(engine.isGameRunning)
     engine.moveLeft()
     engine.moveDown()
-    assertFalse(board.isGameRunning)
+    assertFalse(engine.isGameRunning)
   }
   
   @Test def testStonesFall {
@@ -193,7 +190,7 @@ class GameEngineTest {
     engine.moveDown()
     engine.moveDown()
     
-    assertEquals(List(Stone(List(Point(1,2), Point(2,2)))), board.stones.tail)
-    assertEquals(board.statistics.rowsCompleted, 1)
+    assertEquals(List(Stone(List(Point(1,2), Point(2,2)))), engine.stones.tail)
+    assertEquals(engine.statistics.rowsCompleted, 1)
   }  
 }
