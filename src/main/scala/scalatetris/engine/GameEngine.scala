@@ -11,7 +11,7 @@ sealed class GameEngine (val board: Board, val stoneFactory: StoneFactory) {
     val newStone = stoneFactory.createRandomStone(Point((board.size.width / 2), 0))
     if (board.stones.exists(s => s.doesCollide(newStone)) ||
         (!board.stones.isEmpty && board.stones.head.isOnTop))
-      board.isGameRunning = false
+      board.endGame()
     else
       board.stones ::= newStone
   }

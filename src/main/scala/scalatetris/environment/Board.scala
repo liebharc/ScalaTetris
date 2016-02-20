@@ -5,7 +5,9 @@ import java.util.Calendar
 class Board (val size: Size) {
   var stones = List[Stone]()
   
-  var isGameRunning = true
+  private var _isGameRunning = true
+  
+  def isGameRunning = _isGameRunning
     
   def points = stones.map(_.points).flatten
   
@@ -42,10 +44,12 @@ class Board (val size: Size) {
   }
   
   def restart() {
-    isGameRunning = true
+    _isGameRunning = true
     statistics = Statistics(Calendar.getInstance().getTime(), 0)
     stones = List[Stone]()
   }
+  
+  def endGame() = _isGameRunning = false
 }
 
 
