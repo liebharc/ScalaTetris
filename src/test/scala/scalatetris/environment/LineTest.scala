@@ -80,4 +80,11 @@ class LineTest {
       "-------\n"
     assertEquals(expected, drawing)
   }
+  
+  @Test def toTopTest {
+    val stone = board.stones.head
+    val moved = stone.moveDown().moveDown()
+    val upAgain = moved.toTop()
+    assertEquals(stone, upAgain)
+  }
 }

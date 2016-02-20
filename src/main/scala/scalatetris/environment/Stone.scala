@@ -73,6 +73,14 @@ case class Stone(val points: List[Point]) {
     (max + min + roundUp) / 2
   }
   
+  def toTop(): Stone = {
+    val min = points.foldLeft(points(0)) { 
+      case (min, point) => min.min(point)
+    }
+    
+    Stone(points.map{_ - Point(0, min.y)})
+  }
+  
   def doesCollide(other: Stone) = this.points.exists{a => 
     other.points.exists(a == _)
   }

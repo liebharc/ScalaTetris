@@ -12,7 +12,7 @@ object RandomStoneFactory extends StoneFactory {
   def createRandomStone(start: Point) = 
     {
       val rand = random.nextInt(7)
-      rand match {
+      var point = rand match {
         case 0 => Square(start)
         case 1 => Line(start)
         case 2 => WinnerPodium(start)
@@ -21,6 +21,12 @@ object RandomStoneFactory extends StoneFactory {
         case 5 => StepLeft(start)
         case 6 => StepRight(start) 
       }
+      
+      val rotation = random.nextInt(3)
+      for (_ <- 1 to rotation) {
+        point = point.rotateLeft()
+      }
+      point.toTop()
     }
 }
 
