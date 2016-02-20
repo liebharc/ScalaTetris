@@ -4,7 +4,7 @@ import scalatetris.environment._
 import java.util.Calendar 
 
 sealed class GameEngine (val boardSize: Size, val stoneFactory: StoneFactory) {
-  val board = 
+  private var board = 
     new Board(
         boardSize, 
         stoneFactory.createRandomStone(),
@@ -13,7 +13,7 @@ sealed class GameEngine (val boardSize: Size, val stoneFactory: StoneFactory) {
   def moveDown() {
     if (!move(s => s.moveDown())) {
       val (points, numberOfRemovedRows) = removeFullRows(board.points)
-      board.update(List(Stone(points)), numberOfRemovedRows, stoneFactory.createRandomStone())
+      board = board.update(List(Stone(points)), numberOfRemovedRows, stoneFactory.createRandomStone())
     }
   }
   
@@ -21,7 +21,7 @@ sealed class GameEngine (val boardSize: Size, val stoneFactory: StoneFactory) {
     val oldStone = board.stones.head
     val newStone = action(oldStone)
     if (newStone.isInFrame(board.size) && !board.stones.tail.exists(s => s.doesCollide(newStone))) {
-      board.update(newStone :: board.stones.tail)
+      board = board.update(newStone :: board.stones.tail)
       true
     }
     else false
@@ -43,11 +43,15 @@ sealed class GameEngine (val boardSize: Size, val stoneFactory: StoneFactory) {
     move(s => s.rotateRight)
   }
   
-  def restart() = board.restart()
+  def restart() = board = 
+    new Board(
+        boardSize, 
+        stoneFactory.createRandomStone(),
+        stoneFactory.createRandomStone())
   
   def draw() = board.draw()
   
-  def forceNewStone() = board.forceNewStone(stoneFactory.createRandomStone())
+  def forceNewStone() = board = board.forceNewStone(stoneFactory.createRandomStone())
   
   def isGameRunning = board.isGameRunning
   
