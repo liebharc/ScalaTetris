@@ -9,11 +9,14 @@ sealed class GameEngine (val boardSize: Size, val stoneFactory: StoneFactory) {
         boardSize, 
         stoneFactory.createRandomStone(),
         stoneFactory.createRandomStone())
+  
+  private var history: List[Board] = board :: Nil
     
   def moveDown() {
     if (!move(s => s.moveDown())) {
       val (points, numberOfRemovedRows) = removeFullRows(board.points)
       board = board.update(List(Stone(points)), numberOfRemovedRows, stoneFactory.createRandomStone())
+      history = board :: history
     }
   }
   
@@ -22,6 +25,7 @@ sealed class GameEngine (val boardSize: Size, val stoneFactory: StoneFactory) {
     val newStone = action(oldStone)
     if (newStone.isInFrame(board.size) && !board.stones.tail.exists(s => s.doesCollide(newStone))) {
       board = board.update(newStone :: board.stones.tail)
+      history = board :: history
       true
     }
     else false
@@ -42,16 +46,23 @@ sealed class GameEngine (val boardSize: Size, val stoneFactory: StoneFactory) {
   def rotateRight() {
     move(s => s.rotateRight)
   }
-  
-  def restart() = board = 
-    new Board(
+    
+  def restart() {
+    board =
+      new Board(
         boardSize, 
         stoneFactory.createRandomStone(),
         stoneFactory.createRandomStone())
+    history = board :: Nil
+  }
+    
   
   def draw() = board.draw()
   
-  def forceNewStone() = board = board.forceNewStone(stoneFactory.createRandomStone())
+  def forceNewStone() {
+    board = board.forceNewStone(stoneFactory.createRandomStone())
+    history = board :: history
+  }
   
   def isGameRunning = board.isGameRunning
   

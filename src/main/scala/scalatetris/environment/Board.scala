@@ -48,18 +48,25 @@ class Board private (
         statistics, 
         isGameRunning)
      
-  def draw() = 
+  def draw() = {
+    val previewSize = Size(5, 5)
+    val preview = this.preview.toTopCenter(Point(previewSize.width / 2, 0))
     if (isGameRunning) {
-      drawBoardOnly + "\n" +
+      drawBoardOnlyInternal(size, points) + "\n" +
+      drawBoardOnlyInternal(previewSize, preview.points) + "\n" +
       statistics.draw() 
     } else 
     {
-      drawBoardOnly + 
+      drawBoardOnlyInternal(size, points) +
+      drawBoardOnlyInternal(previewSize, preview.points) + "\n" +
       "GAME OVER\n" +
       statistics.draw()
     }
+  }
   
-  def drawBoardOnly() = {
+  def drawBoardOnly() = drawBoardOnlyInternal(size, points)
+  
+  private def drawBoardOnlyInternal(size: Size, points: List[Point]) = {
     var drawing = ""
     for (arg <- (0 until size.height)) {
       drawing += "|"
