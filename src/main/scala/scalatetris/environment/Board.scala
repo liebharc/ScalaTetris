@@ -11,8 +11,6 @@ class Board (val size: Size) {
     
   def points = stones.map(_.points).flatten
   
-  def points_=(p: List[Point]) = stones = List(Stone(p))
-  
   var statistics = Statistics(Calendar.getInstance().getTime(), 0)
    
   def draw() = 

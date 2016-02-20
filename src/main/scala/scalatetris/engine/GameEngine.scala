@@ -19,7 +19,7 @@ sealed class GameEngine (val board: Board, val stoneFactory: StoneFactory) {
   def moveDown() {
      if (!move(s => s.moveDown())) {
       val (points, numberOfRemovedRows) = removeFullRows(board.points)
-      board.points = points
+      board.stones = List(Stone(points))
       board.statistics = board.statistics.anotherRowHasBeenCompleted(numberOfRemovedRows)
       createNewStone()
      }
