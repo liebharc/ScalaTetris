@@ -10,6 +10,9 @@ class Tetris(val engine: GameEngine, val display: Display) extends Actor {
   private var tickCounts = 0 
   
   def receive = {
+    case Continue =>
+      engine.continue()
+      display.render(renderAll())
     case Restart if !engine.isGameRunning => 
       engine.restart()
     case _ if !engine.isGameRunning => ()
@@ -27,6 +30,9 @@ class Tetris(val engine: GameEngine, val display: Display) extends Actor {
       display.render(renderAll())
     case RotateRight =>
       engine.rotateRight()
+      display.render(renderAll())
+    case Pause =>
+      engine.pause()
       display.render(renderAll())
     case Tick =>
       tickCounts += 1

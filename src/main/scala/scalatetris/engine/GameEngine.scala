@@ -10,6 +10,8 @@ sealed class GameEngine (val boardSize: Size, val stoneFactory: StoneFactory) {
         stoneFactory.createRandomStone(),
         stoneFactory.createRandomStone())
   
+  private var isRunning = true
+  
   private var history: List[Board] = board :: Nil
     
   def moveDown() {
@@ -55,16 +57,21 @@ sealed class GameEngine (val boardSize: Size, val stoneFactory: StoneFactory) {
         stoneFactory.createRandomStone())
     history = board :: Nil
   }
-    
-  
-  def draw() = board.draw()
+      
+  def draw() = 
+    if (isRunning || !board.isGameRunning) 
+      board.draw()
+    else {
+      "GAME PAUSED\n" +
+      board.draw()
+    }
   
   def forceNewStone() {
     board = board.forceNewStone(stoneFactory.createRandomStone())
     history = board :: history
   }
   
-  def isGameRunning = board.isGameRunning
+  def isGameRunning = board.isGameRunning && isRunning
   
   def stones = board.stones
   
@@ -73,6 +80,10 @@ sealed class GameEngine (val boardSize: Size, val stoneFactory: StoneFactory) {
   def statistics = board.statistics
   
   def drawBoardOnly() = board.drawBoardOnly
+  
+  def pause() = isRunning = false
+  
+  def continue() = isRunning = true
     
   private def removeFullRows(points: List[Point], 
                             height: Int = board.size.height): (List[Point], Int) = points match {
