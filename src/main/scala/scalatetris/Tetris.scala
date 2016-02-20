@@ -10,6 +10,8 @@ class Tetris(val engine: GameEngine, val board: Board, val display: Display) ext
   private var tickCounts = 0 
   
   def receive = {
+    case Restart if !board.isGameRunning => 
+      board.Reset()
     case _ if !board.isGameRunning => ()
     case Left => 
       engine.moveLeft()
@@ -26,14 +28,14 @@ class Tetris(val engine: GameEngine, val board: Board, val display: Display) ext
     case RotateRight =>
       engine.rotateRight()
       display.render(renderAll())
-    case Tick => {
+    case Tick =>
       tickCounts += 1
       if (tickCounts % 5 == 0) {
         engine.moveDown()
       }
       
       display.render(renderAll())
-    }
+    case _ => ()
   }
   
   def renderAll() = {

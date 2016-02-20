@@ -26,6 +26,9 @@ sealed class GameEngine (val board: Board, val stoneFactory: StoneFactory) {
   }
   
   private def move(action: (Stone) => Stone) = {
+    if (board.stones.isEmpty)
+      createNewStone()
+    
     val oldStone = board.stones.head
     val newStone = action(oldStone)
     if (newStone.isInFrame(board.size) && !board.stones.tail.exists(s => s.doesCollide(newStone))) {

@@ -40,6 +40,12 @@ class Board (val size: Size) {
   }
   
   var isGameRunning = true
+  
+  def Reset() {
+    isGameRunning = true
+    statistics = Statistics(Calendar.getInstance().getTime(), 0)
+    stones = List[Stone]()
+  }
 }
 
 

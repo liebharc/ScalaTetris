@@ -59,6 +59,8 @@ object Main extends SimpleSwingApplication {
               tetris ! RotateLeft
             case Key.E => 
               tetris ! RotateRight
+            case Key.R => 
+              tetris ! Restart
             case _ => ()
           }
         }
