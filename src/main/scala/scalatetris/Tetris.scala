@@ -20,6 +20,12 @@ class Tetris(val engine: GameEngine, val board: Board, val display: Display) ext
     case Down =>
       engine.moveDown()
       display.render(renderAll())
+    case RotateLeft =>
+      engine.rotateLeft()
+      display.render(renderAll())
+    case RotateRight =>
+      engine.rotateRight()
+      display.render(renderAll())
     case Tick => {
       tickCounts += 1
       if (tickCounts % 5 == 0) {
