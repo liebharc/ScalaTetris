@@ -18,9 +18,9 @@ class Tetris(val engine: GameEngine, val display: Display) extends Actor {
     case Left if !engine.isGameRunning => 
       engine.backwardInTime()
       display.render(renderAll())
-    /*case Right if !engine.isGameRunning =>
-      engine.moveRight()
-      display.render(renderAll())*/
+    case Right if !engine.isGameRunning =>
+      engine.backIntoTheFuture()
+      display.render(renderAll())
     case _ if !engine.isGameRunning => ()
     case Left => 
       engine.moveLeft()

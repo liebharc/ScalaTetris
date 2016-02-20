@@ -13,6 +13,8 @@ sealed class GameEngine (val boardSize: Size, val stoneFactory: StoneFactory) {
   private var isRunning = true
   
   private var history: List[Board] = board :: Nil
+  
+  private var future: List[Board] = Nil
     
   def moveDown() {
     if (!move(s => s.moveDown())) {
@@ -56,6 +58,7 @@ sealed class GameEngine (val boardSize: Size, val stoneFactory: StoneFactory) {
         stoneFactory.createRandomStone(),
         stoneFactory.createRandomStone())
     history = board :: Nil
+    future = Nil
   }
       
   def draw() = 
@@ -83,14 +86,29 @@ sealed class GameEngine (val boardSize: Size, val stoneFactory: StoneFactory) {
   
   def pause() = isRunning = false
   
-  def continue() = isRunning = true
+  def continue() = {
+    isRunning = true
+    future = Nil
+  }
   
   def backwardInTime() {
     history match {
       case Nil => ()
       case head :: tail => 
+        future = board :: future
         board = head
         history = tail
+    }
+    pause()
+  }
+  
+  def backIntoTheFuture() {
+    future match {
+      case Nil => ()
+      case head :: tail => 
+        history = board :: history
+        board = head
+        future = tail
     }
     pause()
   }

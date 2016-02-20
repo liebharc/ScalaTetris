@@ -21,4 +21,15 @@ class ScrollHistoryTest {
     assertEquals(stones, engine.stones)
     assertEquals(false, engine.isGameRunning)
   }
+  
+  @Test def goForwardTest {
+    engine.moveDown
+    var future = engine.stones
+    engine.backwardInTime()
+    engine.backwardInTime()
+    engine.backIntoTheFuture()
+    engine.backIntoTheFuture()
+    assertEquals(future, engine.stones)
+    assertEquals(false, engine.isGameRunning)
+  }
 }
